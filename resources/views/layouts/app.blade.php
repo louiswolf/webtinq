@@ -104,7 +104,7 @@
 
                 <!-- Branding Image -->
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    <img src="/webtinq/public/logo-webtinq.png" width="150">
+                    <img src="{{ url('/logo-webtinq.png') }}" width="150">
                 </a>
             </div>
 
@@ -124,7 +124,7 @@
                     @else
                         @if (!empty(Auth::user()->avatar))
                         <li>
-                            <img src="/webtinq/storage/app/{{ Auth::user()->avatar->location }}" style="max-width:50px;">
+                            <img src="{{ url(str_replace('public', '', Auth::user()->avatar->location)) }}" style="max-width:50px;">
                         </li>
                         @endif
                         <li class="dropdown">

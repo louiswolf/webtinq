@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\URL;
 use Validator;
 use Storage;
 use App\User;
@@ -15,13 +16,14 @@ use App\Pagetype;
 
 class EditorController extends Controller
 {
-    private $base_url = 'http://localhost/webtinq/public/';
+    private $base_url; //'http://localhost/webtinq/public/';
 
     /**
      * Create a new controller instance.
      */
     public function __construct()
     {
+        $this->base_url = URL::to('/');
         $this->middleware('auth');
     }
 
@@ -360,7 +362,7 @@ class EditorController extends Controller
             'extension' => '',
             'published' => $site->published,
             'url_view' => '$urlView',
-            'path' => $this->base_url . $site->slug . '/afbeeldingen/' . $file->name,
+            'path' => $this->base_url . '/' . $site->slug . '/afbeeldingen/' . $file->name,
         ]);
     }
 
@@ -424,7 +426,7 @@ class EditorController extends Controller
 
     private function getTreeListUrl($site_id, $infix, $page_id, $owner_id = null)
     {
-        return $this->base_url . 'editor/' . $site_id . '/' . $infix . '/' . $page_id . ($owner_id ? '?owner=' . $owner_id : '');
+        return $this->base_url . '/editor/' . $site_id . '/' . $infix . '/' . $page_id . ($owner_id ? '?owner=' . $owner_id : '');
     }
 
     private function getTreeListItem($class, $indent, $url, $title)
@@ -434,7 +436,7 @@ class EditorController extends Controller
 
     private function getPath($site, $page, $extension)
     {
-        return $this->base_url . $site->slug . '/' . $page->name . $extension;
+        return $this->base_url . '/' . $site->slug . '/' . $page->name . $extension;
     }
 
     private function getUrlView($site, $path)

@@ -129,6 +129,16 @@ class SiteController extends Controller
 
     /**
      * @param Request $request
+     * @param $id
+     * @param $image_name
+     */
+    public function viewAvatar(Request $request, $id, $image_name)
+    {
+        $this->viewImage($request, '', $image_name);
+    }
+
+    /**
+     * @param Request $request
      * @param $site_id
      * @param int $page_id
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector

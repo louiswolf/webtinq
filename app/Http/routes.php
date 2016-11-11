@@ -46,6 +46,7 @@ Route::post('/post-rename-page', 'EditorController@postRenamePage');
 
 Route::get('/{slug}/{path}.{type}', 'SiteController@view');
 Route::get('/{slug}/afbeeldingen/{image}', 'SiteController@viewImage');
+Route::get('/avatars/{id}/{image}', 'SiteController@viewAvatar');
 Route::get('/site-settings/{id}', 'SiteController@settings');
 Route::post('/post-site-settings', 'SiteController@postSettings');
 
