@@ -6,6 +6,7 @@ use App\Http\Requests;
 use Illuminate\Http\Request;
 use App\User;
 use App\Role;
+use Validator;
 
 class NewStudentController extends Controller
 {
