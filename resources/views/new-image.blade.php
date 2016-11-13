@@ -11,8 +11,9 @@
                     <a href="{{ url('/dashboard') }}">Dashboard</a>
                 </li>
                 <li style="display:inline-block;margin-left:10px">
-                    <a href="{{ url('/settings') }}">Instellingen</a>
-                </li>            </ul>
+                    <a href="{{ url('/settings') }}">Jouw Instellingen</a>
+                </li>
+            </ul>
         </div>
     </div>
     <div class="row">

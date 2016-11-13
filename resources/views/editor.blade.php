@@ -13,7 +13,7 @@
                     <a href="{{ url('/dashboard') }}">Dashboard</a>
                 </li>
                 <li style="display:inline-block;margin-left:10px">
-                    <a href="{{ url('settings') }}">Jouw instellingen</a>
+                    <a href="{{ url('/settings') }}">Jouw instellingen</a>
                 </li>
             </ul>
         </div>

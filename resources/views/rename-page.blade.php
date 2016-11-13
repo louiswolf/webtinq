@@ -7,12 +7,13 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1" style="text-align: right;">
             <ul style="list-style: none;">
-                 <li style="display:inline-block;margin-left:10px">
-                    <a href="../dashboard">Dashboard</a>
+                <li style="display:inline-block;margin-left:10px">
+                    <a href="{{ url('/dashboard') }}">Dashboard</a>
                 </li>
                 <li style="display:inline-block;margin-left:10px">
-                    <a href="../settings">Instellingen</a>
-                </li>            </ul>
+                    <a href="{{ url('/settings') }}">Jouw Instellingen</a>
+                </li>
+            </ul>
         </div>
     </div>
     <div class="row">

@@ -45,6 +45,10 @@
             color: #cc3c73;
         }
 
+        a.active {
+            font-weight: bold;
+        }
+
         body {
             font-family: 'Lato';
         }

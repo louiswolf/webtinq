@@ -8,7 +8,10 @@
         <div class="col-md-12" style="text-align: right;">
             <ul style="list-style: none;">
                 <li style="display:inline-block;margin-left:10px">
-                    <a href="settings">Instellingen</a>
+                    <a href="{{ url('/dashboard') }}" class="active">Dashboard</a>
+                </li>
+                <li style="display:inline-block;margin-left:10px">
+                    <a href="{{ url('/settings') }}">Jouw Instellingen</a>
                 </li>
             </ul>
         </div>

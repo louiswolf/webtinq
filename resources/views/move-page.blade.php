@@ -8,11 +8,12 @@
         <div class="col-md-10 col-md-offset-1" style="text-align: right;">
             <ul style="list-style: none;">
                  <li style="display:inline-block;margin-left:10px">
-                    <a href="../dashboard">Dashboard</a>
+                    <a href="{{ url('/dashboard') }}">Dashboard</a>
                 </li>
                 <li style="display:inline-block;margin-left:10px">
-                    <a href="../settings">Instellingen</a>
-                </li>            </ul>
+                    <a href="{{ url('/settings') }}">Jouw Instellingen</a>
+                </li>
+            </ul>
         </div>
     </div>
     <div class="row">
@@ -23,7 +24,7 @@
                 <div class="panel-body">
                     @include('common.errors')
 
-                    <form class="form-horizontal" role="form" method="post" action="{{ url('/post-move-page') }}">
+                    <form class="form-horizontal" role="form" method="post" action="{{ url('/editor/' . $site_id . '/post-move-page') }}">
                         {{ csrf_field() }}
 
                         <input type="hidden" id="page_id" name="page_id" value="{{ $id }}">
