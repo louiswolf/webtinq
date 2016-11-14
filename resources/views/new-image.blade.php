@@ -48,7 +48,7 @@
 
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
-                                <button type="submit" class="btn bnt-primary">
+                                <button type="submit" class="btn btn-primary">
                                      <i class="fa fa-plus"></i> Afbeelding opslaan
                                 </button>
                                 <a href="{{ url('/editor/'.$id) }}" class="btn btn-link">Terug</a>
