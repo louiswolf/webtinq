@@ -91,7 +91,6 @@ class SiteController extends Controller
                 exit();
             }
         }
-
         echo 'pagina niet gevonden';
         exit();
     }
@@ -156,6 +155,11 @@ class SiteController extends Controller
 
     private function showPage($pages, $path, $type)
     {
+        if (count($pages)==0) {
+            echo 'Oeps, deze website heeft nog geen pagina\'s!';
+            exit();
+        }
+
         foreach ($pages as $page) {
             if ($page->name == $path) {
                 $this->setHeader($type);

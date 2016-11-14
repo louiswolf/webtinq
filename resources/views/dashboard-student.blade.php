@@ -39,7 +39,7 @@
                                     <a href="{{ url( 'editor/' . $site->id ) }}" class="btn bnt-primary">Pagina's Bewerken</a>
                                     <a href="{{ url( 'site-settings/' . $site->id ) }}" class="btn bnt-primary">Instellingen</a>
                                     <a href="{{ url( $site->slug . '/index.html' ) }}" target="_blank" class="btn bnt-primary">Bekijk</a>
-                                    <a href="{{ url( 'delete-site/' . $site->id ) }}" class="btn bnt-primary">Verwijder (TODO)</a>
+                                    {{--<a href="{{ url( 'delete-site/' . $site->id ) }}" class="btn bnt-primary">--}}Verwijder (TODO){{--</a>--}}
                                 </td>
                             </tr>
                         @endforeach
