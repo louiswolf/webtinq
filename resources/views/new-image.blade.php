@@ -28,18 +28,6 @@
                         {{ csrf_field() }}
                         <input type="hidden" name="site_id" id="site_id" value="{{ $id }}">
                         <div class="form-group">
-                            <label for="parent_folder" class="col-md-4 control-label">Map</label>
-                            <div class="col-md-6">
-                                <select id="parent_folder" name="parent_folder" class="form-control">
-                                    <option value="0">/</option>
-                                    @foreach ( $folders as $page )
-                                        <option value="{{ $page->id }}">{{ $page->name }}/</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
                             <label for="image" class="col-md-4 control-label">Afbeelding</label>
                             <div class="col-md-6">
                                 <span class="btn btn-default btn-file"><input type="file" accept="bmp,.gif,.jpg,.jpeg,.png" value="{{ old('image') }}" name="image" id="image"></span>

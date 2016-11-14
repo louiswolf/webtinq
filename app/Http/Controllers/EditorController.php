@@ -37,15 +37,24 @@ class EditorController extends Controller
         $user = $request->user();
         $site = $this->getSite($user, $id);
         $pages = $site->pages()->get();
-        $page = $pages->get(0);
+        $pageIndex = $pages->get(0);
 
-        if ($page == null) {
-            $pagetype = $this->getPagetypeByName('html');
-            $page = $this->createPage('index', $pagetype);
-            $site->pages()->save($page);
+        if ($pageIndex === null) {
+            $pageTypeHtml = $this->getPageTypeByName('html');
+            $pageIndex = $this->createPage('index', $pageTypeHtml, $site->slug);
+            $site->pages()->save($pageIndex);
+
+            $pageTypeDirectory = $this->getPageTypeByName('/');
+            $directoryCss = $this->createPage('css', $pageTypeDirectory);
+            $site->pages()->save($directoryCss);
+
+            $pageTypeCss = $this->getPageTypeByName('css');
+            $stylesheet = $this->createPage('style', $pageTypeCss);
+            $stylesheet->parent_id = $directoryCss->id;
+            $site->pages()->save($stylesheet);
         }
 
-        return $this->editPage($request, $id, $page->id);
+        return $this->editPage($request, $id, $pageIndex->id);
     }
 
     /**
@@ -294,7 +303,7 @@ class EditorController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'images' => 'mimes:png,jpeg,gif,bmp',
-            'parent_folder' => 'required|integer',
+            //'parent_folder' => 'required|integer',
         ]);
 
         if ($validator->fails()) {
@@ -306,9 +315,9 @@ class EditorController extends Controller
         if (!$validator->fails()) {
             $user = $request->user();
 
-            $filename = Input::file('image')->getClientOriginalName();
-            $uri = 'public/uploads/' . $filename;
             if (!empty($request->file('image'))) {
+                $filename = Input::file('image')->getClientOriginalName();
+                $uri = 'public/uploads/' . $filename;
 
                 try {
                     $file = File::create([
@@ -426,12 +435,16 @@ class EditorController extends Controller
 
     private function getTreeListUrl($site_id, $infix, $page_id, $owner_id = null)
     {
-        return $this->base_url . '/editor/' . $site_id . '/' . $infix . '/' . $page_id . ($owner_id ? '?owner=' . $owner_id : '');
+        $owner_parameter = ($owner_id ? '?owner=' . $owner_id : '');
+        return $this->base_url . '/editor/' . $site_id . '/' . $infix . '/' . $page_id . $owner_parameter;
     }
 
     private function getTreeListItem($class, $indent, $url, $title)
     {
-        return '<li class="' . $class . '"><span style="color:#ccc;">' . $indent . '</span><a href="' . $url . '">' . $title . '</a></li>' . "\n";
+        return '<li class="' . $class . '">' .
+            '<span style="color:#ccc;">' . $indent . '</span>' .
+            '<a href="' . $url . '">' . $title . '</a>' .
+        '</li>' . "\n";
     }
 
     private function getPath($site, $page, $extension)
@@ -444,15 +457,17 @@ class EditorController extends Controller
         return $site->slug . '/' . $path;
     }
 
-    private function getPagetypeByName($name)
+    private function getPageTypeByName($name)
     {
-        foreach (Pagetype::all() as $pagetype) {
-            if ($pagetype->name == $name)
-                return $pagetype;
+        foreach (Pagetype::all() as $pageType) {
+            if ($pageType->name === $name) {
+                return $pageType;
+            }
         }
+        return null;
     }
 
-    private function createPage($name, $pagetype)
+    private function createPage($name, $pagetype, $slug = null)
     {
         $content = '';
         switch ($pagetype->name) {
@@ -461,6 +476,7 @@ class EditorController extends Controller
                     '<!DOCTYPE html>
 <html lang="nl">
     <head>
+        <link rel="stylesheet" type="text/css" href="' . $this->base_url . '/' . $slug . '/style.css">
         <title>WebTinq</title>
     </head>
     <body>
@@ -470,10 +486,11 @@ class EditorController extends Controller
                 break;
             case 'css':
                 $content =
-                    '.body {
+                    'body {
     font-size: 12px;
     font-family: arial,verdana,helvetica;
-    background-color: green;
+    background-color: #ffed66;
+    color: black;
 }';
                 break;
             case '/':

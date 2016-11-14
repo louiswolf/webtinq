@@ -88,6 +88,9 @@
 
                                 @if ($file)
                                     <div class="col-md-9">
+                                        <pre>&lt;img src="{{ $path }}"&gt;</pre>
+                                    </div>
+                                    <div class="col-md-9">
                                         <a href="{{ $path }}" target="_blank"><img src="{{ $path }}" style="max-width:100%;"></a>
                                     </div>
                                 @endif
