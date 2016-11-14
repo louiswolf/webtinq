@@ -10,6 +10,12 @@
                 <li style="display:inline-block;margin-left:10px">
                     <a href="{{ url('/new-student') }}">Nieuwe Leerling</a>
                 </li>
+                <li style="display:inline-block;margin-left:10px">
+                    <a href="{{ url('/dashboard') }}" class="active">Dashboard</a>
+                </li>
+                <li style="display:inline-block;margin-left:10px">
+                    <a href="{{ url('/settings') }}">Jouw Instellingen</a>
+                </li>
                 {{--
                 <li style="display:inline-block;margin-left:10px">
                     <a href="{{ url('/import-students') }}">Importeer Leerlingen</a>
