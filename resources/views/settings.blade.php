@@ -28,6 +28,10 @@
                         <div class="alert alert-warning">{!! \Session::get('warning') !!}</div>
                     @endif
 
+                    @if (\Session::has('success'))
+                        <div class="alert alert-success">{!! \Session::get('success') !!}</div>
+                    @endif
+
                     <form class="form-horizontal" role="form" method="post" action="{{ url('/save-settings') }}" enctype="multipart/form-data">
                         {{ csrf_field() }}
 

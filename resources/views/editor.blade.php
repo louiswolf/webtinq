@@ -51,32 +51,38 @@
                             @endif
 
                             <div class="form-group">
-                                    <div class="col-md-12">
-                                        @if ($page && $extension != '/')
+
+                                <div class="col-md-9">
+                                    <label>HTML</label>
+                                    <pre>&lt;a href="{{$path}}"&gt;link&lt;/a&gt;</pre>
+                                </div>
+
+                                <div class="col-md-12">
+                                    @if ($page && $extension != '/')
                                             <a href="{{ url( $url_view ) }}" target="_blank">Bekijk</a>
                                         @endif
 
                                         @if ($file)
-                                            <a href="{{ $path }}" target="_blank">Bekijk</a>
-                                        @endif
-                                        
+                                                <a href="{{ $path }}" target="_blank">Bekijk</a>
+                                            @endif
+
                                         @if ($page && $page->name != 'index' )
                                             @if ($extension != '/')
-                                            <span> | </span>
-                                            @endif
-                                            <a href="{{ url('editor/'.$id.'/rename-page/'.$page->id) }}">Hernoem</a>
+                                                    <span> | </span>
+                                                @endif
+                                                <a href="{{ url('editor/'.$id.'/rename-page/'.$page->id) }}">Hernoem</a>
                                             @if ($extension != '/')
-                                            <span> | </span>
-                                            <a href="{{ url('editor/'.$id.'/move-page/'.$page->id) }}">Verplaats</a>
+                                                    <span> | </span>
+                                                    <a href="{{ url('editor/'.$id.'/move-page/'.$page->id) }}">Verplaats</a>
+                                                @endif
+                                                <span> | </span>
+                                                <a href="{{ url('editor/'.$id.'/delete-page/'.$page->id) }}">Verwijder</a>
                                             @endif
-                                            <span> | </span>
-                                            <a href="{{ url('editor/'.$id.'/delete-page/'.$page->id) }}">Verwijder</a>
-                                        @endif
                                     </div>
                             </div>
 
                             <div class="form-group">
-                                @if ($page)
+                            @if ($page)
                                     <div class="col-md-9" style="height:400px;position:relative;">
                                     @if ($extension != '/')
                                         <div id="editor" name="editor" class="col-md-9 form-control" style="height: 100%;">{{ $page->content }}</div>
@@ -88,7 +94,12 @@
 
                                 @if ($file)
                                     <div class="col-md-9">
+                                        <label>HTML</label>
                                         <pre>&lt;img src="{{ $path }}"&gt;</pre>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <label>CSS</label>
+                                        <pre>background-image: url('{{ $path }}');"&gt;</pre>
                                     </div>
                                     <div class="col-md-9">
                                         <a href="{{ $path }}" target="_blank"><img src="{{ $path }}" style="max-width:100%;"></a>

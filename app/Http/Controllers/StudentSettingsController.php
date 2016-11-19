@@ -54,6 +54,7 @@ class StudentSettingsController extends Controller
             'password1' => 'same:password2|min:6',
         ]);
 
+
         if ($validator->fails()) {
             return redirect('/settings')
                 ->withInput()
@@ -95,6 +96,10 @@ class StudentSettingsController extends Controller
                 }
                 $user->save();
             }
+
+            return redirect('/settings')->with(
+                array('success' => 'Je instellingen zijn opgeslagen.')
+            );
         }
 
         return view('/settings', ['user' => $user]);
