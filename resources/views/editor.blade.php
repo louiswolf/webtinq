@@ -99,7 +99,7 @@
                                     </div>
                                     <div class="col-md-9">
                                         <label>CSS</label>
-                                        <pre>background-image: url('{{ $path }}');"&gt;</pre>
+                                        <pre>background-image: url('{{ $path }}');</pre>
                                     </div>
                                     <div class="col-md-9">
                                         <a href="{{ $path }}" target="_blank"><img src="{{ $path }}" style="max-width:100%;"></a>
