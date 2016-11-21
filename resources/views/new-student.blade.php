@@ -24,6 +24,10 @@
                 <div class="panel-body">
                     @include('common.errors')
 
+                    @if (\Session::has('success'))
+                        <div class="alert alert-success">{!! \Session::get('success') !!}</div>
+                    @endif
+
                     <form class="form-horizontal" role="form" method="post" action="{{ url('/create-new-student') }}">
                         {{ csrf_field() }}
                         <div class="form-group">

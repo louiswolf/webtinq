@@ -41,21 +41,20 @@ class NewStudentController extends Controller
                 ->withErrors($validator);
         }
 
-        if (!$validator->fails()) {
-            $password = 'webtinq';
-            $user = User::create([
-                'name' => $request->name,
-                'email' => $request->name . '@webtinq.nl',
-                'password' => bcrypt($password),
-                'password_unencrypted' => $password,
-            ]);
+        $password = 'webtinq';
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->name . '@webtinq.nl',
+            'password' => bcrypt($password),
+            'password_unencrypted' => $password,
+        ]);
 
-            $role = Role::find(2);
-            $user->roles()->save($role);
+        $role = Role::find(2);
+        $user->roles()->save($role);
 
-            $request->user()->students()->save($user);
-        }
-
-        return redirect('/new-student');
+        $request->user()->students()->save($user);
+        return redirect('/new-student')->with(
+            array('success' => 'Nieuw leerling account voor ' . $user->name .' aangemaakt.')
+        );
     }
 }

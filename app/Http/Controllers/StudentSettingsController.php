@@ -98,7 +98,7 @@ class StudentSettingsController extends Controller
             }
 
             return redirect('/settings')->with(
-                array('success' => 'Je instellingen zijn opgeslagen.')
+                array('success' => 'Je wachtwoord en avatar zijn opgeslagen.')
             );
         }
 
