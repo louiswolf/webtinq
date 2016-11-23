@@ -49,7 +49,7 @@ class EditorController extends Controller
             $site->pages()->save($directoryCss);
 
             $pageTypeCss = $this->getPageTypeByName('css');
-            $stylesheet = $this->createPage('style', $pageTypeCss);
+            $stylesheet = $this->createPage('style', $pageTypeCss, $site->slug);
             $stylesheet->parent_id = $directoryCss->id;
             $site->pages()->save($stylesheet);
         }
@@ -269,7 +269,7 @@ class EditorController extends Controller
             $name = $request->name;
             $pageType = Pagetype::all()->find($request->extension);
 
-            $page = $this->createPage($name, $pageType);
+            $page = $this->createPage($name, $pageType, $site->slug);
             $site->pages()->save($page);
 
             return redirect('/editor/' . $site->id . '/page/' . $page->id);
@@ -480,7 +480,7 @@ class EditorController extends Controller
         <title>WebTinq</title>
     </head>
     <body>
-        <p>WebTinq</p>
+        <p>Verander deze tekst</p>
     </body>
 </html>';
                 break;

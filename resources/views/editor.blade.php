@@ -52,10 +52,20 @@
 
                             <div class="form-group">
 
-                                <div class="col-md-9">
-                                    <label>HTML</label>
-                                    <pre>&lt;a href="{{$path}}"&gt;link&lt;/a&gt;</pre>
-                                </div>
+                                @if ($page && $extension != '/' && $extension != '.css')
+                                    <div class="col-md-9">
+                                        <label>HTML</label> <span style="color:#999;">&lt;body&gt;...&lt;/body&gt;</span>
+                                        <pre>&lt;a href="{{$path}}"&gt;link&lt;/a&gt;</pre>
+                                    </div>
+                                @endif
+
+                                @if ($page && $extension == '.css')
+                                    <div class="col-md-9">
+                                        <label>HTML</label> <span style="color:#999;">&lt;head&gt;...&lt;/head&gt;</span>
+                                        <pre>&lt;link rel="stylesheet" type="text/css" href="{{$path }}"&gt;</pre>
+                                    </div>
+                                    @endif
+
 
                                 <div class="col-md-12">
                                     @if ($page && $extension != '/')
@@ -94,7 +104,7 @@
 
                                 @if ($file)
                                     <div class="col-md-9">
-                                        <label>HTML</label>
+                                        <label>HTML</label> <span style="color:#999;">&lt;body&gt;...&lt;/body&gt;</span>
                                         <pre>&lt;img src="{{ $path }}"&gt;</pre>
                                     </div>
                                     <div class="col-md-9">

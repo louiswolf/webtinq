@@ -34,9 +34,9 @@ Route::get('/editor/{id}/page/{page_id}', 'EditorController@editPage');
 Route::get('/editor/{id}/file/{file_id}', 'EditorController@file');
 Route::get('/editor/{id}/delete-page/{page_id}', 'EditorController@deletePage');
 Route::get('/editor/{id}/rename-page/{page_id}', 'EditorController@renamePage');
-Route::post('/editor/{id}/save-page/{page_id}', 'EditorController@savePage');
-Route::get('/editor/{site_id}/toggle-published', 'SiteController@togglePublished');
 Route::get('/editor/{id}/move-file/{file_id}', 'EditorController@moveFile');
+Route::get('/editor/{site_id}/toggle-published', 'SiteController@togglePublished');
+Route::post('/editor/{id}/save-page/{page_id}', 'EditorController@savePage');
 
 Route::get('/editor/{id}/move-page/{page_id}', 'EditorController@movePage');
 Route::post('/editor/{id}/post-move-page', 'EditorController@postMovePage');
@@ -45,9 +45,6 @@ Route::post('/post-new-page', 'EditorController@postNewPage');
 Route::post('/post-new-image', 'EditorController@postNewImage');
 Route::post('/post-rename-page', 'EditorController@postRenamePage');
 
-
-Route::get('/{slug}/{path}.{type}', 'SiteController@view');
-Route::get('/{slug}/afbeeldingen/{image}', 'SiteController@viewImage');
 Route::get('/avatars/{id}/{image}', 'SiteController@viewAvatar');
 Route::get('/site-settings/{id}', 'SiteController@settings');
 Route::post('/post-site-settings', 'SiteController@postSettings');
@@ -69,3 +66,9 @@ Route::get('/portal/{id}', 'PortalPublicViewController@view');
 
 /** System **/
 Route::get('/system-admin', 'SystemAdminController@view');
+
+Route::get('/{slug}/{path}.{type}', 'SiteController@view');
+Route::get('/{slug}/afbeeldingen/{image}', 'SiteController@viewImage');
+Route::get('/{slug}', 'SiteController@view');
+
+// TODO page not found

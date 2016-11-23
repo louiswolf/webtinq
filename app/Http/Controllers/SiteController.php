@@ -65,8 +65,12 @@ class SiteController extends Controller
      * @param $path
      * @param $type
      */
-    public function view(Request $request, $slug, $path, $type)
+    public function view(Request $request, $slug, $path = '', $type = '')
     {
+        if ($path == '' && $type == '') {
+            $path = 'index';
+            $type = 'html';
+        }
         $sites = Site::all();
         foreach ($sites as $site) {
             if ($site->slug == $slug) {
@@ -85,7 +89,6 @@ class SiteController extends Controller
                             $this->showPage($pages, $path, $type);
                         }
                     }
-
                 }
                 echo 'Toegang geweigerd';
                 exit();
