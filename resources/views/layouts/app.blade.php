@@ -92,6 +92,14 @@
             color: #00008B;
         }   
     </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#name').on('input', function() {
+                $('#slug').val( $('#name').val().split(' ').join('-').toLowerCase() );
+            });
+        });
+    </script>
 </head>
 <body id="app-layout">
     <nav class="navbar navbar-default navbar-static-top">

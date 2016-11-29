@@ -2,7 +2,6 @@
 
 @section('content')
 
-
 <div class="container">
     <div class="row">
         <div class="col-md-10 col-md-offset-1" style="text-align: right;">
@@ -32,7 +31,7 @@
                             <label for="name" class="col-md-4 control-label">Naam</label>
 
                             <div class="col-md-6">
-                                <input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}">
+                                <input id="name" type="text" class="form-control" name="name" value="bla{{ old('name') }}">
                             </div>
                         </div>
 
@@ -41,7 +40,7 @@
                             <label for="slug" class="col-md-4 control-label">Slug</label>
 
                             <div class="col-md-6">
-                                <input id="slug" type="text" class="form-control" name="slug" value="{{ old('slug') }}">
+                                <input readonly id="slug" type="text" class="form-control" name="slug" value="{{ old('slug') }}">
                             </div>
                         </div>
 
