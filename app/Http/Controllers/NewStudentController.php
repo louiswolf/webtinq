@@ -32,7 +32,7 @@ class NewStudentController extends Controller
     public function create(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|max:255',
+            'name' => 'required|unique:users|max:255',
         ]);
 
         if ($validator->fails()) {

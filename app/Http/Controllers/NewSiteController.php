@@ -32,8 +32,8 @@ class NewSiteController extends Controller
     public function create(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|max:255',
-            'slug' => 'required|max:255',
+            'name' => 'required|unique:sites|max:255',
+            'slug' => 'required|unique:sites|max:255',
         ]);
 
         if (!$validator->fails()) {
