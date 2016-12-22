@@ -21,6 +21,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/download/{file}', 'DownloadController@index');
+
 Route::get('/new-student', 'NewStudentController@index');
 Route::post('/create-new-student', 'NewStudentController@create');
 

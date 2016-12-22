@@ -51,5 +51,48 @@
             </div>
         </div>
     </div>
+    @if (count($students) > 0)
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="panel panel-default">
+                <div class="panel-heading">Bestaande Leerlingen</div>
+
+                <div class="panel-body">
+                    <div class="col-md-offset-1">
+                        <div class="col-md-12 center-block" style="margin: 20px 0">
+                            Leerlingen kunnen met onderstaande login en wacthwoord inloggen op <a href="https://webtinq.nl" target="_blank">https://webtinq.nl</a> om hun eigen website te bouwen.
+                        </div>
+                    </div>
+
+                    <div class="col-md-offset-3">
+                        <div class="col-md-2">
+                            <label>Leerling</label>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Login</label>
+                        </div>
+                        <div class="col-md-7">
+                            <label>Wachtwoord</label>
+                        </div>
+                    </div>
+
+                    @foreach($students as $student)
+                        <div class="col-md-offset-3">
+                            <div class="col-md-2">
+                                <span>{{ $student->name }}</span>
+                            </div>
+                            <div class="col-md-3">
+                                <span>{{ $student->email }}</span>
+                            </div>
+                            <div class="col-md-7">
+                                <span>{{ $student->password_unencrypted }}</span>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
 </div>
 @endsection

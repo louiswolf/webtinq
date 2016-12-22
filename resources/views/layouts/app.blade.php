@@ -100,6 +100,21 @@
             });
         });
     </script>
+    <!-- Piwik -->
+    <script type="text/javascript">
+        var _paq = _paq || [];
+        // tracker methods like "setCustomDimension" should be called before "trackPageView"
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+            var u="//piwik.louiswolf.nl/";
+            _paq.push(['setTrackerUrl', u+'piwik.php']);
+            _paq.push(['setSiteId', '2']);
+            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+            g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+    </script>
+    <!-- End Piwik Code -->
 </head>
 <body id="app-layout">
     <nav class="navbar navbar-default navbar-static-top">
@@ -130,7 +145,8 @@
                 <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav navbar-right">
                     <!-- Authentication Links -->
-                    @if (Auth::guest())
+                @if (Auth::guest())
+                        <li><a href="{{ url('/download/instruction') }}" target="_blank">Download Instructie</a></li>
                         <li><a href="{{ url('/login') }}">Login</a></li>
                         <li><a href="{{ url('/register') }}">Registreer</a></li>
                     @else
