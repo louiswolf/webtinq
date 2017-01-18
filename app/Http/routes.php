@@ -23,6 +23,9 @@ Route::get('/', function () {
 
 Route::get('/download/{file}', 'DownloadController@index');
 
+Route::get('/contact', 'ContactController@index');
+Route::post('/contact', ['as' => 'contact_submit', 'uses' => 'ContactController@submit']);
+
 Route::get('/new-student', 'NewStudentController@index');
 Route::post('/create-new-student', 'NewStudentController@create');
 

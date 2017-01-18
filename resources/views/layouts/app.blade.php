@@ -136,19 +136,23 @@
             </div>
 
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
+
                 <!-- Left Side Of Navbar -->
-                <!--
-                <ul class="nav navbar-nav">
-                    <li><a href="{{ url('/dashboard') }}">Home</a></li>
-                </ul>
-                -->
-                <!-- Right Side Of Navbar -->
+                @if (!Auth::guest())
+                    <ul class="nav navbar-nav">
+                        <li><a href="{{ url('/download/instruction') }}" target="_blank">Download Instructie</a></li>
+                        <li><a href="{{ url('/contact') }}">Contact</a></li>
+                    </ul>
+                @endif
+
+            <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav navbar-right">
                     <!-- Authentication Links -->
-                @if (Auth::guest())
+                    @if (Auth::guest())
                         <li><a href="{{ url('/download/instruction') }}" target="_blank">Download Instructie</a></li>
                         <li><a href="{{ url('/login') }}">Login</a></li>
                         <li><a href="{{ url('/register') }}">Registreer</a></li>
+                        <li><a href="{{ url('/contact') }}">Contact</a></li>
                     @else
                         @if (!empty(Auth::user()->avatar))
                         <li>
