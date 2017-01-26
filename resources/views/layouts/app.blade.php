@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="WebTinq is een gratis, online HTML editor voor kinderen, om webpagina's mee te bouwen én direct te publiceren.">
 
     <title>WebTinq | Websites bouwen voor kinderen</title>
     {!! Html::favicon('favicon.png') !!}
@@ -68,6 +69,11 @@
           margin-bottom: 60px;
         }
 
+        h1 {
+            font-size: 22px;
+            color: #cc3c73;
+        }
+
         .navbar-brand {
             padding-top: 5px;
         }
@@ -91,7 +97,13 @@
         .active a {
             font-weight: bold;
             color: #00008B;
-        }   
+        }
+
+        .social a {
+            width: 20px;
+            display: inline-block;
+            font-size: 14px;
+        }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script type="text/javascript">
@@ -153,6 +165,7 @@
                         <li><a href="{{ url('/download/instruction') }}" target="_blank">Download Instructie</a></li>
                         <li><a href="{{ url('/login') }}">Login</a></li>
                         <li><a href="{{ url('/register') }}">Registreer</a></li>
+                        <li><a href="{{ url('/over') }}">Over</a></li>
                         <li><a href="{{ url('/contact') }}">Contact</a></li>
                     @else
                         @if (!empty(Auth::user()->avatar))
@@ -178,8 +191,14 @@
 
     @yield('content')
 
-    <footer class="footer" style="text-align:center;font-size:10px;position:absolute;bottom:0;width:100%;height:30px;vertical-align:center;">
-        <span>&copy; WebTinq | {{ date( 'Y' ) }}</span>
+    <footer class="footer" style="text-align:center;position:absolute;bottom:0;width:100%;height:40px;vertical-align:center;">
+        <span style="float:left;margin-left:20px;font-size:14px;">&copy; WebTinq | {{ date( 'Y' ) }}</span>
+        <span class="social" style="float:right;margin-right:20px;">
+            <a href="https://twitter.com/webtinq" target="_blank"><i class="fa fa-twitter"></i></a>
+            <a href="https://facebook.com/webtinq" target="_blank"><i class="fa fa-facebook"></i></a>
+            <a href="https://coderdojonederland.slack.com/archives/webtinq" target="_blank"><i class="fa fa-slack"></i></a>
+            <a href="https://github.com/louiswolf/webtinq" target="_blank"><i class="fa fa-github"></i></a>
+        </span>
     </footer>
     
     <!-- JavaScripts -->

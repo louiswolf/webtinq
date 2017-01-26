@@ -19,6 +19,10 @@
                         </div>
                     @endif
 
+                    <p style="color:#666;">Geïnteresseerd in WebTinq? Of wil je de applicatie gebruiken?</p>
+                    <p style="color:#666;">Neem via onderstaand formulier contact met ons op voor antwoord op je vragen.</p>
+                    <p>&nbsp; </p>
+
                     {!! Form::open(array('route' => 'contact_submit', 'class' => 'form')) !!}
 
                     <div class="form-group">

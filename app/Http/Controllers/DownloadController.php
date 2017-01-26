@@ -17,8 +17,14 @@ class DownloadController extends Controller
     {
     }
 
-    public function index(Request $request)
+    public function index(Request $request, $file)
     {
-        return response()->file(public_path().'_html/webtinq-leerling-instructie.pdf');
+        if ( $file === 'instruction' ) {
+            return response()->file(public_path().'_html/webtinq-leerling-instructie.pdf');
+        }
+
+        if ( $file === 'grant-request' ) {
+            return response()->file(public_path().'_html/sidn-fonds-aanvraag-online.pdf');
+        }
     }
 }
