@@ -302,12 +302,12 @@ class EditorController extends Controller
     public function postNewImage(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'images' => 'mimes:png,jpeg,gif,bmp',
+            'image' => 'mimes:png,jpeg,gif,bmp',
             //'parent_folder' => 'required|integer',
         ]);
 
         if ($validator->fails()) {
-            return redirect('/new-image')
+            return redirect('/editor/'.$request->get('site_id').'/new-image')
                 ->withInput()
                 ->withErrors($validator);
         }
