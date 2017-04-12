@@ -12,7 +12,7 @@ class Site extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'slug', 'published', 'blocked', 'removed',
+        'name', 'slug', 'published', 'blocked', 'deleted',
     ];
 
     /**

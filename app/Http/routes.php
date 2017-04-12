@@ -32,6 +32,7 @@ Route::post('/create-new-student', 'NewStudentController@create');
 
 Route::get('/new-site', 'NewSiteController@index');
 Route::post('/create-new-site', 'NewSiteController@create');
+Route::get('/delete-site/{site_id}', 'SiteController@delete');
 
 Route::get('/editor/{id}', 'EditorController@index');
 Route::get('/editor/{id}/new-page', 'EditorController@newPage');

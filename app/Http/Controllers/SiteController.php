@@ -129,7 +129,6 @@ class SiteController extends Controller
 
             header('Content-Length: ' . filesize($path));
             readfile($path);
-
         }
     }
 
@@ -158,6 +157,16 @@ class SiteController extends Controller
         $site->save();
 
         return redirect('/site-settings/' . $site->id);
+    }
+
+    public function delete(Request $request, $site_id) {
+        $this->middleware('auth');
+
+        $site = $request->user()->sites()->find($site_id);
+        $site->deleted = 1;
+        $site->save();
+
+        return redirect('/dashboard');
     }
 
     private function showPage($pages, $path, $type, $parentName)
