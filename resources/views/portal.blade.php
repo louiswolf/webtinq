@@ -22,7 +22,7 @@
                                 @if ( count( $student->sites ) )
                                     <ul style="list-style-type: none;">
                                     @foreach( $student->sites as $site )
-                                        @if ( $site->published )
+                                        @if ( $site->published && !$site->deleted )
                                             <li style="display:inline-block;"><a class="btn btn-default" href="{{ url( $site->slug . '/index.html' ) }}">{{ $site->name }}</a></li>
                                         @endif
                                     @endforeach
