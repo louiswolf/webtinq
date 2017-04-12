@@ -540,7 +540,7 @@ class EditorController extends Controller
                     '<!DOCTYPE html>
 <html lang="nl">
     <head>
-        <link rel="stylesheet" type="text/css" href="' . $this->base_url . '/' . $slug . '/style.css">
+        <link rel="stylesheet" type="text/css" href="' . $this->base_url . '/' . $slug . '/css/style.css">
         <title>WebTinq</title>
     </head>
     <body>
