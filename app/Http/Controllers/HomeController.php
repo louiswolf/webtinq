@@ -46,7 +46,7 @@ class HomeController extends Controller
                     array('warning' => '<b>Let op!</b> Verander je wachtwoord voordat je verder gaat.')
                 );
             }
-            $sites = $user->sites()->get();
+            $sites = $user->sites()->where('deleted', 0)->get();
             return view('dashboard-student', ['sites' => $sites, 'user_status' => $user->status(),]);
         }
 
