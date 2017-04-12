@@ -422,6 +422,17 @@ class EditorController extends Controller
         ]);
     }
 
+    public function autoSave(Request $request, $id, $page_id) {
+        $user = $request->user();
+        $site = $this->getSite($user, $id);
+        $page = $site->pages()->find($page_id);
+
+        $page->content = $request->get('auto_save_content');
+        $page->save();
+
+        return;
+    }
+
     private function getSite($user, $id)
     {
         $site = $user->sites()->find($id);

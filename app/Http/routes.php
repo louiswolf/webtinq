@@ -67,6 +67,9 @@ Route::get('/manage-portals', 'PortalController@manage');
 
 Route::get('/import-students', 'ImportStudentsController@view');
 
+/** AJAX **/
+Route::get('/auto-save/{id}/{page_id}', 'EditorController@autoSave');
+
 /** Public **/
 Route::get('/portal/{id}', 'PortalPublicViewController@view');
 
