@@ -104,6 +104,10 @@
             display: inline-block;
             font-size: 14px;
         }
+
+        .status-light {
+            color: #aaaaaa;
+        }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script type="text/javascript">

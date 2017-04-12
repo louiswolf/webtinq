@@ -73,10 +73,9 @@
                                 @if ($page && $extension == '.js')
                                     <div class="col-md-9">
                                         <label>HTML</label> <span style="color:#999;">&lt;head&gt;...&lt;/head&gt;</span>
-                                        <pre>&lt;script type="text/javascript" src="{{$path}}"&gt;link&lt;/script></pre>
+                                        <pre>&lt;script type="text/javascript" src="{{$path}}"&gt;&lt;/script></pre>
                                     </div>
                                 @endif
-
 
                                 <div class="col-md-12">
                                     @if ($page && $extension != '/')
@@ -103,6 +102,8 @@
                                                     <a href="{{ url('editor/'.$id.'/delete-page/'.$page->id) }}">Verwijder</a>
                                                 @endif
                                         @endif
+
+                                        <span id="auto-save-status" class="status-light"></span>
                                     </div>
                             </div>
 
@@ -173,6 +174,24 @@
     textarea.hide();
 
     var editor = ace.edit("editor");
+    var interval = new Array(0);
+
+    function autoSave() {
+        var auto_save_content = editor.getSession().getValue();
+        if (interval != null) {
+            $('#auto-save-status').html('Automatisch opslaan..');
+            $.ajax({
+                url: "{{ url('/auto-save/'.$id.'/'.$page->id) }}",
+                context: document.body,
+                data: {auto_save_content: auto_save_content}
+            }).done(function (data) {
+                while(interval.length > 0) {
+                    window.clearInterval(interval.pop());
+                }
+                $('#auto-save-status').html('');
+            });
+        }
+    }
 
     if ( editor ) {
         editor.setTheme("ace/theme/sqlserver");
@@ -189,6 +208,10 @@
         @if ($extension == '.js')
             editor.getSession().setMode("ace/mode/javascript");
         @endif
+
+        editor.getSession().on('change', function(e) {
+            interval.push(window.setInterval(autoSave, 3000));
+        });
 
         form.submit( function( event ) {
             textarea.val( editor.getSession().getValue() );
