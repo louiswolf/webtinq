@@ -35,7 +35,11 @@
                                 <div class="col-md-12">
                                     <label for="content" class="form-label">{{ $page->name }}{{ $extension }}</label>
                                     <span> | </span>
-                                    <a href="{{ $path }}" target="_blank">{{ $path }}</a>
+                                    @if ($extension == '/')
+                                        {{ $path }}
+                                    @else
+                                        <a href="{{ $path }}" target="_blank">{{ $path }}</a>
+                                    @endif
                                 </div>
                             </div>
                             @endif
@@ -52,7 +56,7 @@
 
                             <div class="form-group">
 
-                                @if ($page && $extension != '/' && $extension != '.css')
+                                @if ($page && $extension == '.html')
                                     <div class="col-md-9">
                                         <label>HTML</label> <span style="color:#999;">&lt;body&gt;...&lt;/body&gt;</span>
                                         <pre>&lt;a href="{{$path}}"&gt;link&lt;/a&gt;</pre>
@@ -64,7 +68,14 @@
                                         <label>HTML</label> <span style="color:#999;">&lt;head&gt;...&lt;/head&gt;</span>
                                         <pre>&lt;link rel="stylesheet" type="text/css" href="{{$path }}"&gt;</pre>
                                     </div>
-                                    @endif
+                                @endif
+
+                                @if ($page && $extension == '.js')
+                                    <div class="col-md-9">
+                                        <label>HTML</label> <span style="color:#999;">&lt;head&gt;...&lt;/head&gt;</span>
+                                        <pre>&lt;script type="text/javascript" src="{{$path}}"&gt;link&lt;/script></pre>
+                                    </div>
+                                @endif
 
 
                                 <div class="col-md-12">
@@ -79,15 +90,19 @@
                                         @if ($page && $page->name != 'index' )
                                             @if ($extension != '/')
                                                     <span> | </span>
-                                                @endif
+                                            @endif
+                                            @if ($page->name != 'css' && $page->name != 'js')
                                                 <a href="{{ url('editor/'.$id.'/rename-page/'.$page->id) }}">Hernoem</a>
+                                            @endif
                                             @if ($extension != '/')
                                                     <span> | </span>
                                                     <a href="{{ url('editor/'.$id.'/move-page/'.$page->id) }}">Verplaats</a>
                                                 @endif
+                                                @if ($page->name != 'css' && $page->name != 'js')
                                                 <span> | </span>
-                                                <a href="{{ url('editor/'.$id.'/delete-page/'.$page->id) }}">Verwijder</a>
-                                            @endif
+                                                    <a href="{{ url('editor/'.$id.'/delete-page/'.$page->id) }}">Verwijder</a>
+                                                @endif
+                                        @endif
                                     </div>
                             </div>
 
@@ -116,6 +131,7 @@
                                     </div>
                                 @endif
 
+                                {{-- Sidebar (page tree) --}}
                                 @if ($pages == '')
                                     <div class="col-md-offset-9">Geen pagina's gevonden</div>
                                 @else
@@ -169,6 +185,9 @@
         @endif
         @if ($extension == '.css')
             editor.getSession().setMode("ace/mode/css");
+        @endif
+        @if ($extension == '.js')
+            editor.getSession().setMode("ace/mode/javascript");
         @endif
 
         form.submit( function( event ) {

@@ -73,8 +73,9 @@ Route::get('/portal/{id}', 'PortalPublicViewController@view');
 /** System **/
 Route::get('/system-admin', 'SystemAdminController@view');
 
-Route::get('/{slug}/{path}.{type}', 'SiteController@view');
 Route::get('/{slug}/afbeeldingen/{image}', 'SiteController@viewImage');
+Route::get('/{slug}/{path}.{type}', 'SiteController@view');
+Route::get('/{slug}/{folder}/{path}.{type}', 'SiteController@viewChild');
 Route::get('/{slug}', 'SiteController@view');
 
 // TODO page not found

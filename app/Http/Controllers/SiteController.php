@@ -65,7 +65,7 @@ class SiteController extends Controller
      * @param $path
      * @param $type
      */
-    public function view(Request $request, $slug, $path = '', $type = '')
+    public function view(Request $request, $slug, $path = '', $type = '', $folder = '')
     {
         if ($path == '' && $type == '') {
             $path = 'index';
@@ -76,7 +76,7 @@ class SiteController extends Controller
             if ($site->slug == $slug) {
                 $pages = $site->pages()->get();
                 if ($site->published) {
-                    $this->showPage($pages, $path, $type);
+                    $this->showPage($pages, $path, $type, $folder);
                 }
 
                 if (!$site->published) {
@@ -86,7 +86,7 @@ class SiteController extends Controller
                     if ($user) {
                         $is_user_teacher_for_site = $this->isUserTeacherForSite($user, $site);
                         if ($site->users()->find($user->id) || $is_user_teacher_for_site) {
-                            $this->showPage($pages, $path, $type);
+                            $this->showPage($pages, $path, $type, $folder);
                         }
                     }
                 }
@@ -96,6 +96,10 @@ class SiteController extends Controller
         }
         echo 'pagina niet gevonden';
         exit();
+    }
+
+    public function viewChild(Request $request, $slug, $folder = '', $path = '', $type = '') {
+        $this->view($request, $slug, $path, $type, $folder);
     }
 
     /**
@@ -156,7 +160,7 @@ class SiteController extends Controller
         return redirect('/site-settings/' . $site->id);
     }
 
-    private function showPage($pages, $path, $type)
+    private function showPage($pages, $path, $type, $parentName)
     {
         if (count($pages)==0) {
             echo 'Oeps, deze website heeft nog geen pagina\'s!';
@@ -165,9 +169,21 @@ class SiteController extends Controller
 
         foreach ($pages as $page) {
             if ($page->name == $path) {
-                $this->setHeader($type);
-                echo $page->content;
-                exit();
+                $show = false;
+                if ($page->parent_id == 0 && $parentName == '') {
+                    $show = true;
+                } else {
+                    foreach ($pages as $p) {
+                        if ($p->id == $page->parent_id && $p->name == $parentName) {
+                            $show = true;
+                        }
+                    }
+                }
+                if ($show) {
+                    $this->setHeader($type);
+                    echo $page->content;
+                    exit();
+                }
             }
         }
     }
