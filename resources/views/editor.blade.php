@@ -21,7 +21,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default">
-                    <div class="panel-heading">Editor</div>
+                    <div class="panel-heading">Editor <a style="float:right;" href="{{ url('/editor/'.$id.'/split') }}"><i class="fa fa-columns"></i></a></div>
 
                     <div class="panel-body">
                     @include('common.errors')

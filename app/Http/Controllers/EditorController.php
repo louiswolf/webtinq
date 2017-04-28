@@ -32,7 +32,7 @@ class EditorController extends Controller
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index(Request $request, $id)
+    public function index(Request $request, $id, $split_screen = 'no-split')
     {
         $user = $request->user();
         $site = $this->getSite($user, $id);
@@ -63,7 +63,7 @@ class EditorController extends Controller
             $site->pages()->save($script);
         }
 
-        return $this->editPage($request, $id, $pageIndex->id);
+        return $this->editPage($request, $id, $pageIndex->id, ($split_screen === 'split'));
     }
 
     /**
@@ -72,7 +72,7 @@ class EditorController extends Controller
      * @param $page_id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function editPage(Request $request, $id, $page_id)
+    public function editPage(Request $request, $id, $page_id, $split_screen = false)
     {
         $user = $request->user();
         $site = $this->getSite($user, $id);
@@ -97,7 +97,12 @@ class EditorController extends Controller
         $path = $page->name . $extension;
         $urlView = $this->getUrlView($site, $path);
 
-        return view('/editor', [
+        $view = '/editor';
+        if ($split_screen) {
+            $view = '/split-screen-editor';
+        }
+
+        return view($view, [
             'id' => $id,
             'site_name' => $site->name,
             'site_slug' => $site->slug,

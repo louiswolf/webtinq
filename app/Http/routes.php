@@ -35,6 +35,8 @@ Route::post('/create-new-site', 'NewSiteController@create');
 Route::get('/delete-site/{site_id}', 'SiteController@delete');
 
 Route::get('/editor/{id}', 'EditorController@index');
+Route::get('/editor/{id}/{split}', 'EditorController@index');
+
 Route::get('/editor/{id}/new-page', 'EditorController@newPage');
 Route::get('/editor/{id}/new-image', 'EditorController@newImage');
 Route::get('/editor/{id}/page/{page_id}', 'EditorController@editPage');

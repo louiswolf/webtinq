@@ -108,6 +108,15 @@
         .status-light {
             color: #aaaaaa;
         }
+
+        .footer {
+            text-align:center;
+            position:absolute;
+            bottom:0;
+            width:100%;
+            height:40px;
+            vertical-align:center;
+        }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script type="text/javascript">
@@ -195,7 +204,7 @@
 
     @yield('content')
 
-    <footer class="footer" style="text-align:center;position:absolute;bottom:0;width:100%;height:40px;vertical-align:center;">
+    <footer class="footer">
         <span style="float:left;margin-left:20px;font-size:14px;">&copy; WebTinq | {{ date( 'Y' ) }}</span>
         <span class="social" style="float:right;margin-right:20px;">
             <a href="https://twitter.com/webtinq" target="_blank"><i class="fa fa-twitter"></i></a>
