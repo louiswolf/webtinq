@@ -36,10 +36,11 @@ Route::get('/delete-site/{site_id}', 'SiteController@delete');
 
 Route::get('/editor/{id}', 'EditorController@index');
 Route::get('/editor/{id}/{split}', 'EditorController@index');
+Route::get('/editor/{id}/page/{page_id}', 'EditorController@editPage');
+Route::get('/editor/{id}/page/{page_id}/{split}', 'EditorController@editPage');
 
 Route::get('/editor/{id}/new-page', 'EditorController@newPage');
 Route::get('/editor/{id}/new-image', 'EditorController@newImage');
-Route::get('/editor/{id}/page/{page_id}', 'EditorController@editPage');
 Route::get('/editor/{id}/file/{file_id}', 'EditorController@file');
 Route::get('/editor/{id}/delete-page/{page_id}', 'EditorController@deletePage');
 Route::get('/editor/{id}/rename-page/{page_id}', 'EditorController@renamePage');

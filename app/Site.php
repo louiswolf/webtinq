@@ -23,6 +23,10 @@ class Site extends Model
         return $this->hasMany('App\Page');
     }
 
+    public function index() {
+        return $this->pages->where('name', 'index')->first();
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */

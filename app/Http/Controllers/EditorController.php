@@ -97,6 +97,11 @@ class EditorController extends Controller
         $path = $page->name . $extension;
         $urlView = $this->getUrlView($site, $path);
 
+        $pathPreview = $this->getPath($site, $page, $extension);
+        if ($extension != '.html') {
+            $pathPreview = $this->getPath($site, $site->index(), '.html');
+        }
+
         $view = '/editor';
         if ($split_screen) {
             $view = '/split-screen-editor';
@@ -113,6 +118,9 @@ class EditorController extends Controller
             'extension' => $extension,
             'published' => $site->published,
             'url_view' => $urlView,
+            'url_request' => $request->url(),
+            'url_close' => str_replace('/split', '', $request->url()),
+            'path_preview' => $pathPreview,
             'path' => $this->getPath($site, $page, $extension),
         ]);
     }
@@ -423,6 +431,7 @@ class EditorController extends Controller
             'extension' => '',
             'published' => $site->published,
             'url_view' => '$urlView',
+            'url_request' => $request->url(),
             'path' => $this->base_url . '/' . $site->slug . '/afbeeldingen/' . $file->name,
         ]);
     }

@@ -21,8 +21,10 @@
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default">
-                    <div class="panel-heading">Editor <a style="float:right;" href="{{ url('/editor/'.$id.'/split') }}"><i class="fa fa-columns"></i></a></div>
-
+                    <div class="panel-heading">
+                        Editor
+                        @if (!$file) <a style="float:right;" href="{{ $url_request }}/split"><i class="fa fa-columns"></i></a> @endif
+                    </div>
                     <div class="panel-body">
                     @include('common.errors')
 
@@ -167,6 +169,7 @@
 <script src="{{ asset('assets/js/jquery/jquery.min.js') }}" type="text/javascript" charset="utf-8"></script>
 <script src="{{ asset('assets/js/jscolor/jscolor.min.js') }}" type="text/javascript" charset="utf-8"></script>
 <script src="{{ asset('assets/js/ace/ace.js') }}" type="text/javascript" charset="utf-8"></script>
+
 <script>
     var form = $('#form-editor');
 
@@ -176,22 +179,25 @@
     var editor = ace.edit("editor");
     var interval = new Array(0);
 
-    function autoSave() {
-        var auto_save_content = editor.getSession().getValue();
-        if (interval != null) {
-            $('#auto-save-status').html('Automatisch opslaan..');
-            $.ajax({
-                url: "{{ url('/auto-save/'.$id.'/'.$page->id) }}",
-                context: document.body,
-                data: {auto_save_content: auto_save_content}
-            }).done(function (data) {
-                while(interval.length > 0) {
-                    window.clearInterval(interval.pop());
-                }
-                $('#auto-save-status').html('');
-            });
+
+    @if ( !$file )
+        function autoSave() {
+            var auto_save_content = editor.getSession().getValue();
+            if (interval != null) {
+                $('#auto-save-status').html('Automatisch opslaan..');
+                $.ajax({
+                    url: "{{ url('/auto-save/'.$id.'/'.$page->id) }}",
+                    context: document.body,
+                    data: {auto_save_content: auto_save_content}
+                }).done(function (data) {
+                    while(interval.length > 0) {
+                        window.clearInterval(interval.pop());
+                    }
+                    $('#auto-save-status').html('');
+                });
+            }
         }
-    }
+    @endif
 
     if ( editor ) {
         editor.setTheme("ace/theme/sqlserver");
@@ -209,13 +215,15 @@
             editor.getSession().setMode("ace/mode/javascript");
         @endif
 
-        editor.getSession().on('change', function(e) {
-            interval.push(window.setInterval(autoSave, 3000));
-        });
+        @if ( !$file )
+            editor.getSession().on('change', function(e) {
+                interval.push(window.setInterval(autoSave, 3000));
+            });
 
-        form.submit( function( event ) {
-            textarea.val( editor.getSession().getValue() );
-        });
+            form.submit( function( event ) {
+                textarea.val( editor.getSession().getValue() );
+            });
+        @endif
     }
 </script>
 @endsection

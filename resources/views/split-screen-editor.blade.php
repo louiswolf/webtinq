@@ -65,6 +65,7 @@
 
         .split-screen {
             width: 50%;
+            overflow: hidden;
         }
 
         .editor {
@@ -73,7 +74,7 @@
 
         .preview {
             border-left: 1px solid #ccc;
-            overflow: scroll;
+            overflow: hidden;
         }
 
         .footer {
@@ -88,9 +89,10 @@
             font-size: 10px !important;
         }
 
-        iframe {
+        #editor-iframe {
             border: 0;
             width: 100%;
+            height: 100%;
         }
 
         form {
@@ -99,13 +101,13 @@
     </style>
     <form name="form-editor" id="form-editor" style="padding:0;margin:0" class="form-horizontal" role="form" method="post" action="@if ($page){{ url('/editor/'.$id.'/save-page/'.$page->id) }}@endif">
         <div class="status-bar">
-            <span class="status">Saving..</span>
-            <span class="buttons"><a href="{{ url('/editor/'.$id) }}"><i class="fa fa-close"></i></a></span></div>
+            <span id="auto-save-status" class="status"></span>
+            <span class="buttons"><a href="{{ $url_close }}"><i class="fa fa-close"></i></a></span></div>
         <div class="split-screen-container">
             {{ csrf_field() }}
             <textarea id="content" name="content"></textarea>
             <div id="editor" name="editor" class="split-screen editor">{{ $page->content }}</div>
-            <div class="split-screen preview"><iframe id="editor" scrolling="no" src="{{$path}}"></iframe></div>
+            <div class="split-screen preview"><iframe id="editor-iframe" src="{{ $path_preview }}"></iframe></div>
         </div>
     </form>
     <script src="{{ asset('assets/js/jquery/jquery.min.js') }}" type="text/javascript" charset="utf-8"></script>
@@ -131,6 +133,7 @@
                         window.clearInterval(interval.pop());
                     }
                     $('#auto-save-status').html('');
+                    document.getElementById('editor-iframe').setAttribute('src', document.getElementById('editor-iframe').getAttribute('src'));
                 });
             }
         }
@@ -152,7 +155,7 @@
             @endif
 
             editor.getSession().on('change', function(e) {
-                interval.push(window.setInterval(autoSave, 3000));
+                interval.push(window.setInterval(autoSave, 1000));
             });
 
             form.submit( function( event ) {
