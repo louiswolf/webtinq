@@ -12,7 +12,7 @@
                         <div class="" style="background: #f5f5f5;padding:5px;border-radius:3px;margin-bottom: 5px;position:relative;">
                             <div class="avatar-name" style="width:100px;display:inline-block;text-align: center;">
                                 @if ( $student->avatar )
-                                    <img src="/webtinq/storage/app/{{ $student->avatar->location }}" style="max-height:75px;max-width:75px;"><br>
+                                    <img src="{{ url( str_replace( 'public', '', $student->avatar->location ) ) }}" style="max-height:75px;max-width:75px;"><br>
                                 @else
                                     <img src="{{ url('/avatars/default.png') }}" style="max-width:75px;max-height:75px;"><br>
                                 @endif
