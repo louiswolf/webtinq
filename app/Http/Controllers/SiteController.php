@@ -27,9 +27,29 @@ class SiteController extends Controller
     public function settings(Request $request, $id)
     {
         $this->middleware('auth');
-
-        $site = $request->user()->sites()->find($id);
+        $site = $this->getSite($request->user(), $id);
         return view('site-settings', ['site' => $site]);
+    }
+
+    /**
+     * @param $id
+     * @return \App\Site
+     */
+    public function getSite($user, $id) {
+        $site = $user->sites()->find($id);
+        if ($site) {
+            return $site;
+        }
+
+        if (!$site) {
+            foreach ($user->students()->get() as $student) {
+                if ($site = $student->sites()->find($id)) {
+                    return $site;
+                }
+            }
+        }
+
+        return;
     }
 
     /**
@@ -50,7 +70,7 @@ class SiteController extends Controller
                 ->withErrors($validator);
         }
 
-        $site = $request->user()->sites()->find($request->site_id);
+        $site = $this->getSite($request->user(), $request->site_id);
 
         $site->name = $request->site_name;
         $site->slug = $request->site_slug;
@@ -152,8 +172,8 @@ class SiteController extends Controller
     {
         $this->middleware('auth');
 
-        $site = $request->user()->sites()->find($site_id);
-        $site->published = ($site->published == 0 ? 1 : 0);
+        $site = $this->getSite($request->user(), $site_id);
+        $site->published = !$site->published;
         $site->save();
 
         return redirect('/site-settings/' . $site->id);
