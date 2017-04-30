@@ -31,13 +31,13 @@
                             @foreach ( $user->portals as $portal )
                                 <div class="col-md-10 col-md-offset-1">
                                         <div class="col-md-2">
-                                            <input type="checkbox">
+                                            {{--<input type="checkbox">--}}
                                         </div>
                                         <div class="col-md-2">
                                             <span class="">{{ $portal->name }}</span>
                                         </div>
                                         <div class="col-md-6">
-                                            <a href="">Bewerk (TODO)</a> / <a href="">Open (TODO)</a> / <a href="">Sluit (TODO)</a>
+                                            {{--<a href="">Bewerk (TODO)</a> / <a href="">Open (TODO)</a> / <a href="">Sluit (TODO)</a>--}}
                                         </div>
                                         <div class="col-md-2">
                                             <a href="{{ url('portal/' . $portal->id ) }}">Bekijk</a>

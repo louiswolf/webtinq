@@ -10,6 +10,8 @@ use App\File;
 
 class SiteController extends Controller
 {
+    const DEFAULT_AVATAR = 'logo-small.png';
+
     /**
      * Create a new controller instance.
      *
@@ -130,7 +132,12 @@ class SiteController extends Controller
     public function viewImage(Request $request, $slug, $image_name)
     {
         $file = File::where('name', $image_name)->first();
-        $path = '../storage/app/' . $file->location;
+        $file_location = 'public/avatars/' . SiteController::DEFAULT_AVATAR;
+        if ($file) {
+            $file_location = $file->location;
+        }
+
+        $path = '../storage/app/' . $file_location;
         if (file_exists($path)) {
             $imageInfo = getimagesize($path);
             switch ($imageInfo[2]) {
@@ -160,6 +167,10 @@ class SiteController extends Controller
     public function viewAvatar(Request $request, $id, $image_name)
     {
         $this->viewImage($request, '', $image_name);
+    }
+
+    public function viewAvatarDefault(Request $request) {
+        $this->viewImage($request, '', SiteController::DEFAULT_AVATAR);
     }
 
     /**

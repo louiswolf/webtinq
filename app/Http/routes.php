@@ -55,6 +55,7 @@ Route::post('/post-new-page', 'EditorController@postNewPage');
 Route::post('/post-new-image', 'EditorController@postNewImage');
 Route::post('/post-rename-page', 'EditorController@postRenamePage');
 
+Route::get('/avatars/default.png', 'SiteController@viewAvatarDefault');
 Route::get('/avatars/{id}/{image}', 'SiteController@viewAvatar');
 Route::get('/site-settings/{id}', 'SiteController@settings');
 Route::post('/post-site-settings', 'SiteController@postSettings');
