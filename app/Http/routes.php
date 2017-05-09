@@ -35,8 +35,6 @@ Route::post('/create-new-site', 'NewSiteController@create');
 Route::get('/delete-site/{site_id}', 'SiteController@delete');
 
 Route::get('/editor/{site_id}/toggle-published', 'SiteController@togglePublished');
-Route::get('/editor/{id}', 'EditorController@index');
-Route::get('/editor/{id}/{split}', 'EditorController@index');
 Route::get('/editor/{id}/page/{page_id}', 'EditorController@editPage');
 Route::get('/editor/{id}/page/{page_id}/{split}', 'EditorController@editPage');
 
@@ -50,6 +48,9 @@ Route::post('/editor/{id}/save-page/{page_id}', 'EditorController@savePage');
 
 Route::get('/editor/{id}/move-page/{page_id}', 'EditorController@movePage');
 Route::post('/editor/{id}/post-move-page', 'EditorController@postMovePage');
+
+Route::get('/editor/{id}/{split}', 'EditorController@index');
+Route::get('/editor/{id}', 'EditorController@index');
 
 Route::post('/post-new-page', 'EditorController@postNewPage');
 Route::post('/post-new-image', 'EditorController@postNewImage');
