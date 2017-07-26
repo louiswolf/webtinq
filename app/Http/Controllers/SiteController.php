@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Validator;
 use App\Site;
 use App\File;
@@ -94,6 +95,7 @@ class SiteController extends Controller
             $type = 'html';
         }
         $sites = Site::all();
+
         foreach ($sites as $site) {
             if ($site->slug == $slug) {
                 $pages = $site->pages()->get();
@@ -105,6 +107,7 @@ class SiteController extends Controller
                     $this->middleware('auth');
 
                     $user = $request->user();
+
                     if ($user) {
                         $is_user_teacher_for_site = $this->isUserTeacherForSite($user, $site);
                         if ($site->users()->find($user->id) || $is_user_teacher_for_site) {
@@ -116,8 +119,8 @@ class SiteController extends Controller
                 exit();
             }
         }
-        echo 'pagina niet gevonden';
-        exit();
+
+        throw new NotFoundHttpException();
     }
 
     public function viewChild(Request $request, $slug, $folder = '', $path = '', $type = '') {
