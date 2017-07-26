@@ -32,7 +32,7 @@ class EditorController extends Controller
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index(Request $request, $id)
+    public function index(Request $request, $id, $split_screen = 'no-split')
     {
         $user = $request->user();
         $site = $this->getSite($user, $id);
@@ -45,6 +45,7 @@ class EditorController extends Controller
             $site->pages()->save($pageIndex);
 
             $pageTypeDirectory = $this->getPageTypeByName('/');
+
             $directoryCss = $this->createPage('css', $pageTypeDirectory);
             $site->pages()->save($directoryCss);
 
@@ -52,9 +53,17 @@ class EditorController extends Controller
             $stylesheet = $this->createPage('style', $pageTypeCss, $site->slug);
             $stylesheet->parent_id = $directoryCss->id;
             $site->pages()->save($stylesheet);
+
+            $directoryJs = $this->createPage('js', $pageTypeDirectory);
+            $site->pages()->save($directoryJs);
+
+            $pageTypeJs = $this->getPageTypeByName('js');
+            $script = $this->createPage('script', $pageTypeJs, $site->slug);
+            $script->parent_id = $directoryJs->id;
+            $site->pages()->save($script);
         }
 
-        return $this->editPage($request, $id, $pageIndex->id);
+        return $this->editPage($request, $id, $pageIndex->id, ($split_screen === 'split'));
     }
 
     /**
@@ -63,7 +72,7 @@ class EditorController extends Controller
      * @param $page_id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function editPage(Request $request, $id, $page_id)
+    public function editPage(Request $request, $id, $page_id, $split_screen = false)
     {
         $user = $request->user();
         $site = $this->getSite($user, $id);
@@ -88,7 +97,17 @@ class EditorController extends Controller
         $path = $page->name . $extension;
         $urlView = $this->getUrlView($site, $path);
 
-        return view('/editor', [
+        $pathPreview = $this->getPath($site, $page, $extension);
+        if ($extension != '.html') {
+            $pathPreview = $this->getPath($site, $site->index(), '.html');
+        }
+
+        $view = '/editor';
+        if ($split_screen) {
+            $view = '/split-screen-editor';
+        }
+
+        return view($view, [
             'id' => $id,
             'site_name' => $site->name,
             'site_slug' => $site->slug,
@@ -99,6 +118,9 @@ class EditorController extends Controller
             'extension' => $extension,
             'published' => $site->published,
             'url_view' => $urlView,
+            'url_request' => $request->url(),
+            'url_close' => str_replace('/split', '', $request->url()),
+            'path_preview' => $pathPreview,
             'path' => $this->getPath($site, $page, $extension),
         ]);
     }
@@ -132,6 +154,19 @@ class EditorController extends Controller
         $user = $request->user();
         $site = $this->getSite($user, $request->site_id);
         $page = $site->pages()->find($request->page_id);
+
+        if ($page->name == 'css') {
+            return redirect('/editor/' . $request->page_id)->withErrors(
+                array('message' => 'Je kunt de CSS map niet hernoemen.')
+            );
+        }
+
+        if ($page->name == 'js') {
+            return redirect('/editor/' . $request->page_id)->withErrors(
+                array('message' => 'Je kunt de JavaScript map niet hernoemen.')
+            );
+        }
+
         $page->name = $request->name;
         $page->save();
 
@@ -150,8 +185,26 @@ class EditorController extends Controller
         $site = $this->getSite($user, $id);
         $pages = $site->pages()->get();
 
-        $pages->find($page_id)->delete();
+        $page = $pages->find($page_id);
+        if ($page->getChildren()->count() != 0) {
+            return redirect('/editor/' . $id)->withErrors(
+                array('message' => 'Deze map is niet leeg.')
+            );
+        }
 
+        if ($page->name == 'css') {
+            return redirect('/editor/' . $id)->withErrors(
+                array('message' => 'Je kunt de CSS map niet verwijderen.')
+            );
+        }
+
+        if ($page->name == 'js') {
+            return redirect('/editor/' . $id)->withErrors(
+                array('message' => 'Je kunt de JavaScript map niet verwijderen.')
+            );
+        }
+
+        $page->delete();
         return redirect('/editor/' . $id);
     }
 
@@ -225,6 +278,13 @@ class EditorController extends Controller
             $site = $this->getSite($user, $request->site_id);
             $page = $site->pages()->find($request->page_id);
             $page->parent_id = $request->parent_id;
+
+            if ($page->type()->name == '/') {
+                return redirect('/editor/' . $request->site_id . '/page/' . $request->page_id)->withErrors(
+                    array('message' => 'Sorry, we kunnen geen mappen in mappen plaatsen.')
+                );
+            }
+
             $page->save();
             return redirect('/editor/' . $request->site_id . '/page/' . $request->page_id);
         }
@@ -237,7 +297,7 @@ class EditorController extends Controller
      */
     public function newPage(Request $request, $id)
     {
-        $pagetypes = Pagetype::all();
+        $pagetypes = Pagetype::orderBy('name', 'ASC')->get();
         return view('/new-page', [
             'id' => $id,
             'pagetypes' => $pagetypes,
@@ -302,12 +362,12 @@ class EditorController extends Controller
     public function postNewImage(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'images' => 'mimes:png,jpeg,gif,bmp',
+            'image' => 'mimes:png,jpeg,gif,bmp',
             //'parent_folder' => 'required|integer',
         ]);
 
         if ($validator->fails()) {
-            return redirect('/new-image')
+            return redirect('/editor/'.$request->get('site_id').'/new-image')
                 ->withInput()
                 ->withErrors($validator);
         }
@@ -371,8 +431,20 @@ class EditorController extends Controller
             'extension' => '',
             'published' => $site->published,
             'url_view' => '$urlView',
+            'url_request' => $request->url(),
             'path' => $this->base_url . '/' . $site->slug . '/afbeeldingen/' . $file->name,
         ]);
+    }
+
+    public function autoSave(Request $request, $id, $page_id) {
+        $user = $request->user();
+        $site = $this->getSite($user, $id);
+        $page = $site->pages()->find($page_id);
+
+        $page->content = $request->get('auto_save_content');
+        $page->save();
+
+        return;
     }
 
     private function getSite($user, $id)
@@ -449,7 +521,12 @@ class EditorController extends Controller
 
     private function getPath($site, $page, $extension)
     {
-        return $this->base_url . '/' . $site->slug . '/' . $page->name . $extension;
+        $folder = '';
+        if ($page->parent_id != 0) {
+            $parent = Page::where('id', $page->parent_id)->get()->first();
+            $folder = $parent->name . '/';
+        }
+        return $this->base_url . '/' . $site->slug . '/' . $folder . $page->name . $extension;
     }
 
     private function getUrlView($site, $path)
@@ -470,13 +547,14 @@ class EditorController extends Controller
     private function createPage($name, $pagetype, $slug = null)
     {
         $content = '';
+        $parent = 0;
         switch ($pagetype->name) {
             case 'html':
                 $content =
                     '<!DOCTYPE html>
 <html lang="nl">
     <head>
-        <link rel="stylesheet" type="text/css" href="' . $this->base_url . '/' . $slug . '/style.css">
+        <link rel="stylesheet" type="text/css" href="' . $this->base_url . '/' . $slug . '/css/style.css">
         <title>WebTinq</title>
     </head>
     <body>

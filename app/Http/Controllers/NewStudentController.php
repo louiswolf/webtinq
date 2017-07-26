@@ -18,9 +18,11 @@ class NewStudentController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        return view('/new-student');
+        $user = $request->user();
+        $students = $user->students()->get();
+        return view('/new-student', ['students' => $students]);
     }
 
     /**

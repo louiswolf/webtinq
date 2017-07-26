@@ -21,8 +21,10 @@
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default">
-                    <div class="panel-heading">Editor</div>
-
+                    <div class="panel-heading">
+                        Editor
+                        @if (!$file) <a style="float:right;" href="{{ $url_request }}/split"><i class="fa fa-columns"></i></a> @endif
+                    </div>
                     <div class="panel-body">
                     @include('common.errors')
 
@@ -35,7 +37,11 @@
                                 <div class="col-md-12">
                                     <label for="content" class="form-label">{{ $page->name }}{{ $extension }}</label>
                                     <span> | </span>
-                                    <a href="{{ $path }}" target="_blank">{{ $path }}</a>
+                                    @if ($extension == '/')
+                                        {{ $path }}
+                                    @else
+                                        <a href="{{ $path }}" target="_blank">{{ $path }}</a>
+                                    @endif
                                 </div>
                             </div>
                             @endif
@@ -52,7 +58,7 @@
 
                             <div class="form-group">
 
-                                @if ($page && $extension != '/' && $extension != '.css')
+                                @if ($page && $extension == '.html')
                                     <div class="col-md-9">
                                         <label>HTML</label> <span style="color:#999;">&lt;body&gt;...&lt;/body&gt;</span>
                                         <pre>&lt;a href="{{$path}}"&gt;link&lt;/a&gt;</pre>
@@ -64,8 +70,14 @@
                                         <label>HTML</label> <span style="color:#999;">&lt;head&gt;...&lt;/head&gt;</span>
                                         <pre>&lt;link rel="stylesheet" type="text/css" href="{{$path }}"&gt;</pre>
                                     </div>
-                                    @endif
+                                @endif
 
+                                @if ($page && $extension == '.js')
+                                    <div class="col-md-9">
+                                        <label>HTML</label> <span style="color:#999;">&lt;head&gt;...&lt;/head&gt;</span>
+                                        <pre>&lt;script type="text/javascript" src="{{$path}}"&gt;&lt;/script></pre>
+                                    </div>
+                                @endif
 
                                 <div class="col-md-12">
                                     @if ($page && $extension != '/')
@@ -79,15 +91,21 @@
                                         @if ($page && $page->name != 'index' )
                                             @if ($extension != '/')
                                                     <span> | </span>
-                                                @endif
+                                            @endif
+                                            @if ($page->name != 'css' && $page->name != 'js')
                                                 <a href="{{ url('editor/'.$id.'/rename-page/'.$page->id) }}">Hernoem</a>
+                                            @endif
                                             @if ($extension != '/')
                                                     <span> | </span>
                                                     <a href="{{ url('editor/'.$id.'/move-page/'.$page->id) }}">Verplaats</a>
                                                 @endif
+                                                @if ($page->name != 'css' && $page->name != 'js')
                                                 <span> | </span>
-                                                <a href="{{ url('editor/'.$id.'/delete-page/'.$page->id) }}">Verwijder</a>
-                                            @endif
+                                                    <a href="{{ url('editor/'.$id.'/delete-page/'.$page->id) }}">Verwijder</a>
+                                                @endif
+                                        @endif
+
+                                        <span id="auto-save-status" class="status-light"></span>
                                     </div>
                             </div>
 
@@ -116,6 +134,7 @@
                                     </div>
                                 @endif
 
+                                {{-- Sidebar (page tree) --}}
                                 @if ($pages == '')
                                     <div class="col-md-offset-9">Geen pagina's gevonden</div>
                                 @else
@@ -150,6 +169,7 @@
 <script src="{{ asset('assets/js/jquery/jquery.min.js') }}" type="text/javascript" charset="utf-8"></script>
 <script src="{{ asset('assets/js/jscolor/jscolor.min.js') }}" type="text/javascript" charset="utf-8"></script>
 <script src="{{ asset('assets/js/ace/ace.js') }}" type="text/javascript" charset="utf-8"></script>
+
 <script>
     var form = $('#form-editor');
 
@@ -157,6 +177,27 @@
     textarea.hide();
 
     var editor = ace.edit("editor");
+    var interval = new Array(0);
+
+
+    @if ( !$file )
+        function autoSave() {
+            var auto_save_content = editor.getSession().getValue();
+            if (interval != null) {
+                $('#auto-save-status').html('Automatisch opslaan..');
+                $.ajax({
+                    url: "{{ url('/auto-save/'.$id.'/'.$page->id) }}",
+                    context: document.body,
+                    data: {auto_save_content: auto_save_content}
+                }).done(function (data) {
+                    while(interval.length > 0) {
+                        window.clearInterval(interval.pop());
+                    }
+                    $('#auto-save-status').html('');
+                });
+            }
+        }
+    @endif
 
     if ( editor ) {
         editor.setTheme("ace/theme/sqlserver");
@@ -170,10 +211,19 @@
         @if ($extension == '.css')
             editor.getSession().setMode("ace/mode/css");
         @endif
+        @if ($extension == '.js')
+            editor.getSession().setMode("ace/mode/javascript");
+        @endif
 
-        form.submit( function( event ) {
-            textarea.val( editor.getSession().getValue() );
-        });
+        @if ( !$file )
+            editor.getSession().on('change', function(e) {
+                interval.push(window.setInterval(autoSave, 3000));
+            });
+
+            form.submit( function( event ) {
+                textarea.val( editor.getSession().getValue() );
+            });
+        @endif
     }
 </script>
 @endsection

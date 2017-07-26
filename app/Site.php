@@ -12,7 +12,7 @@ class Site extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'slug', 'published', 'blocked', 'removed',
+        'name', 'slug', 'published', 'blocked', 'deleted',
     ];
 
     /**
@@ -21,6 +21,10 @@ class Site extends Model
     public function pages()
     {
         return $this->hasMany('App\Page');
+    }
+
+    public function index() {
+        return $this->pages->where('name', 'index')->first();
     }
 
     /**

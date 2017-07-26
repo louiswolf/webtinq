@@ -18,6 +18,12 @@
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
+                            <div class="col-md-10 col-md-offset-1" style="text-align: center;">
+                                <p>Let op: alleen <strong>begeleiders</strong> kunnen een wachtwoord reset doen.</p>
+                                <p>Leerlingen kunnen hun begeleider vragen om hun login gegevens.</p>
+                                <p>&nbsp;</p>
+                            </div>
+
                             <label for="email" class="col-md-4 control-label">E-Mail Adres</label>
 
                             <div class="col-md-6">

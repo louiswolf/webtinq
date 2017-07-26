@@ -10,6 +10,8 @@ use App\File;
 
 class SiteController extends Controller
 {
+    const DEFAULT_AVATAR = 'logo-small.png';
+
     /**
      * Create a new controller instance.
      *
@@ -27,9 +29,29 @@ class SiteController extends Controller
     public function settings(Request $request, $id)
     {
         $this->middleware('auth');
-
-        $site = $request->user()->sites()->find($id);
+        $site = $this->getSite($request->user(), $id);
         return view('site-settings', ['site' => $site]);
+    }
+
+    /**
+     * @param $id
+     * @return \App\Site
+     */
+    public function getSite($user, $id) {
+        $site = $user->sites()->find($id);
+        if ($site) {
+            return $site;
+        }
+
+        if (!$site) {
+            foreach ($user->students()->get() as $student) {
+                if ($site = $student->sites()->find($id)) {
+                    return $site;
+                }
+            }
+        }
+
+        return;
     }
 
     /**
@@ -50,7 +72,7 @@ class SiteController extends Controller
                 ->withErrors($validator);
         }
 
-        $site = $request->user()->sites()->find($request->site_id);
+        $site = $this->getSite($request->user(), $request->site_id);
 
         $site->name = $request->site_name;
         $site->slug = $request->site_slug;
@@ -65,7 +87,7 @@ class SiteController extends Controller
      * @param $path
      * @param $type
      */
-    public function view(Request $request, $slug, $path = '', $type = '')
+    public function view(Request $request, $slug, $path = '', $type = '', $folder = '')
     {
         if ($path == '' && $type == '') {
             $path = 'index';
@@ -76,7 +98,7 @@ class SiteController extends Controller
             if ($site->slug == $slug) {
                 $pages = $site->pages()->get();
                 if ($site->published) {
-                    $this->showPage($pages, $path, $type);
+                    $this->showPage($pages, $path, $type, $folder);
                 }
 
                 if (!$site->published) {
@@ -86,7 +108,7 @@ class SiteController extends Controller
                     if ($user) {
                         $is_user_teacher_for_site = $this->isUserTeacherForSite($user, $site);
                         if ($site->users()->find($user->id) || $is_user_teacher_for_site) {
-                            $this->showPage($pages, $path, $type);
+                            $this->showPage($pages, $path, $type, $folder);
                         }
                     }
                 }
@@ -98,6 +120,10 @@ class SiteController extends Controller
         exit();
     }
 
+    public function viewChild(Request $request, $slug, $folder = '', $path = '', $type = '') {
+        $this->view($request, $slug, $path, $type, $folder);
+    }
+
     /**
      * @param Request $request
      * @param $slug
@@ -106,7 +132,12 @@ class SiteController extends Controller
     public function viewImage(Request $request, $slug, $image_name)
     {
         $file = File::where('name', $image_name)->first();
-        $path = '../storage/app/' . $file->location;
+        $file_location = 'public/avatars/' . SiteController::DEFAULT_AVATAR;
+        if ($file) {
+            $file_location = $file->location;
+        }
+
+        $path = '../storage/app/' . $file_location;
         if (file_exists($path)) {
             $imageInfo = getimagesize($path);
             switch ($imageInfo[2]) {
@@ -125,7 +156,6 @@ class SiteController extends Controller
 
             header('Content-Length: ' . filesize($path));
             readfile($path);
-
         }
     }
 
@@ -139,6 +169,10 @@ class SiteController extends Controller
         $this->viewImage($request, '', $image_name);
     }
 
+    public function viewAvatarDefault(Request $request) {
+        $this->viewImage($request, '', SiteController::DEFAULT_AVATAR);
+    }
+
     /**
      * @param Request $request
      * @param $site_id
@@ -149,14 +183,24 @@ class SiteController extends Controller
     {
         $this->middleware('auth');
 
-        $site = $request->user()->sites()->find($site_id);
-        $site->published = ($site->published == 0 ? 1 : 0);
+        $site = $this->getSite($request->user(), $site_id);
+        $site->published = !$site->published;
         $site->save();
 
         return redirect('/site-settings/' . $site->id);
     }
 
-    private function showPage($pages, $path, $type)
+    public function delete(Request $request, $site_id) {
+        $this->middleware('auth');
+
+        $site = $request->user()->sites()->find($site_id);
+        $site->deleted = 1;
+        $site->save();
+
+        return redirect('/dashboard');
+    }
+
+    private function showPage($pages, $path, $type, $parentName)
     {
         if (count($pages)==0) {
             echo 'Oeps, deze website heeft nog geen pagina\'s!';
@@ -165,9 +209,21 @@ class SiteController extends Controller
 
         foreach ($pages as $page) {
             if ($page->name == $path) {
-                $this->setHeader($type);
-                echo $page->content;
-                exit();
+                $show = false;
+                if ($page->parent_id == 0 && $parentName == '') {
+                    $show = true;
+                } else {
+                    foreach ($pages as $p) {
+                        if ($p->id == $page->parent_id && $p->name == $parentName) {
+                            $show = true;
+                        }
+                    }
+                }
+                if ($show) {
+                    $this->setHeader($type);
+                    echo $page->content;
+                    exit();
+                }
             }
         }
     }

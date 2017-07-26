@@ -30,7 +30,9 @@
                         <div class="form-group">
                             <label for="image" class="col-md-4 control-label">Afbeelding</label>
                             <div class="col-md-6">
-                                <span class="btn btn-default btn-file"><input type="file" accept="bmp,.gif,.jpg,.jpeg,.png" value="{{ old('image') }}" name="image" id="image"></span>
+                                <span class="btn btn-default btn-file">
+                                    <input type="file" accept="bmp,.gif,.jpg,.jpeg,.png" value="{{ old('image') }}" name="image" id="image">
+                                </span>
                             </div>
                         </div>
 

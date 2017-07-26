@@ -12,24 +12,26 @@
                         <div class="" style="background: #f5f5f5;padding:5px;border-radius:3px;margin-bottom: 5px;position:relative;">
                             <div class="avatar-name" style="width:100px;display:inline-block;text-align: center;">
                                 @if ( $student->avatar )
-                                    <img src="/webtinq/storage/app/{{ $student->avatar->location }}" style="max-height:75px;max-width:75px;"><br>
+                                    <img src="{{ url( str_replace( 'public', '', $student->avatar->location ) ) }}" style="max-height:75px;max-width:75px;"><br>
                                 @else
-                                    <img src="" style="width:75px;height:75px;border:1px solid #000;"><br>
+                                    <img src="{{ url('/avatars/default.png') }}" style="max-width:75px;max-height:75px;"><br>
                                 @endif
                                 {{ $student->name }}
                             </div>
                             <div class="site-list" style="display: inline-block;position:relative;top:-25px;">
-                                @if ( count( $student->sites ) )
-                                    <ul style="list-style-type: none;">
-                                    @foreach( $student->sites as $site )
-                                        @if ( $site->published )
-                                            <li style="display:inline-block;"><a class="btn btn-default" href="{{ url( $site->slug . '/index.html' ) }}">{{ $site->name }}</a></li>
-                                        @endif
-                                    @endforeach
-                                    </ul>
-                                @else
-                                    <span>Geen websites gevonden</span>
-                                @endif
+                                <ul style="list-style-type: none;">
+                                    @if ( count( $student->sites->where('published', 1) ) )
+                                        @foreach( $student->sites as $site )
+                                            @if ( $site->published && !$site->deleted )
+                                                <li style="display:inline-block;">
+                                                    <a class="btn btn-default" href="{{ url( $site->slug . '/index.html' ) }}">{{ $site->name }}</a>
+                                                </li>
+                                            @endif
+                                        @endforeach
+                                    @else
+                                        <li style="display:inline-block;color:#ccc;font-style:italic;">Geen websites gevonden</li>
+                                    @endif
+                                </ul>
                             </div>
                         </div>
                     @endforeach

@@ -16,11 +16,6 @@
                 <li style="display:inline-block;margin-left:10px">
                     <a href="{{ url('/settings') }}">Jouw Instellingen</a>
                 </li>
-                {{--
-                <li style="display:inline-block;margin-left:10px">
-                    <a href="{{ url('/import-students') }}">Importeer Leerlingen</a>
-                </li>
-                --}}
                 @if ( $user_status === 1 )
                     <li style="display:inline-block;margin-left:10px">
                         <a href="{{ url('/system-admin') }}">System admin</a>
@@ -73,7 +68,7 @@
                         @endforeach
                         </table>
                     @else
-                        <span>Geen leerlingen gevonden</span>
+                        <span>Geen leerlingen gevonden. <a href="{{ url('/new-student') }}">Voeg een leerling toe</a></span>
                     @endif
 
                 </div>
